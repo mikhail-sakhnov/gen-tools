@@ -44,7 +44,7 @@ func main() {
 	structName := flag.String("struct", "Struct", "structure name")
 	tagName := flag.String("tag", "gorm", "tag name to use")
 	format := flag.String("format", "gorm", "Which format to use")
-
+	flag.Parse()
 	sqlFields := getSqlFieldNames(os.Stdin)
 	fmt.Println("type", *structName, "struct {")
 	for _, field := range sqlFields {
@@ -54,7 +54,9 @@ func main() {
 		fieldGoName := namifyField(field)
 		switch *format {
 		case "gorm":
-			fmt.Printf("\t %s `%s:\"%s\"`\n", fieldGoName, *tagName, field)
+			fmt.Printf("\t %s string `%s:\"column:%s\"`\n", fieldGoName, *tagName, field)
+		case "notag":
+			fmt.Printf("\t %s\n", fieldGoName)
 		default:
 			panic("Unknown format " + *format)
 		}
